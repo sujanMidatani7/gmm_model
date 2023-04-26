@@ -2,7 +2,7 @@ import streamlit as st
 import torch
 import torchaudio
 import librosa
-import numpy
+import numpy as np
 # Load the encoder classifier model
 
 def cosine_similarity(x1, x2):
