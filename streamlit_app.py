@@ -33,7 +33,7 @@ def analyze_audio(file):
     ddmfcc1 = (ddmfcc1 - np.mean(ddmfcc1)) / np.std(ddmfcc1)
 #     st.write(ddmfcc1.shape)
     X1 = np.reshape(ddmfcc1.T, (ddmfcc1.shape[1]*ddmfcc1.shape[0]*ddmfcc1.shape[2], 1))
-    n_components = 22
+    n_components = 23
 
     gmm1 = GaussianMixture(n_components=n_components, covariance_type='diag')
     gmm1.fit(X1)
