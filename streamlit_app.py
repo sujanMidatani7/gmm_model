@@ -43,7 +43,7 @@ def analyze_audio(file):
          weight1 = gmm1.weights_[i]
          features1[i] = np.sum(weight1 * np.log(var1) + 0.5 * np.log(2 * np.pi * np.e))
 
-    return features1
+    return torch.from_numpy(features1)
     # Display the embeddings
 #     st.write("The x-vector embeddings are:")
 #     st.write(embeddings_xvect)
