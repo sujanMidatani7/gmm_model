@@ -1,10 +1,10 @@
 import streamlit as st
 import torch
 import torchaudio
-from speechbrain.pretrained import EncoderClassifier
-
+import librosa
+import numpy
 # Load the encoder classifier model
-classifier = EncoderClassifier.from_hparams(source="speechbrain/spkrec-xvect-voxceleb", savedir="pretrained_models/spkrec-xvect-voxceleb")
+
 def cosine_similarity(x1, x2):
     dot_product = torch.sum(x1 * x2, dim=-1)
     norm_x1 = torch.norm(x1, dim=-1)
@@ -25,15 +25,30 @@ def analyze_audio(file):
         return
 
     # Encode the audio signal using the x-vector model
-    embeddings_xvect = classifier.encode_batch(waveform)
-    return embeddings_xvect
+    mfcc1 = librosa.feature.mfcc(y=waveform, sr=16000, n_mfcc=20, n_fft=4096, hop_length=11)
+    delta_mfcc1 = librosa.feature.delta(mfcc1)
+    delta2_mfcc1 = librosa.feature.delta(mfcc1, order=2)
+    ddmfcc1 = np.vstack((mfcc1, delta_mfcc1, delta2_mfcc1))
+    ddmfcc1 = (ddmfcc1 - np.mean(ddmfcc1)) / np.std(ddmfcc1)
+    X1 = np.reshape(ddmfcc1.T, (ddmfcc1.shape[1]*ddmfcc1.shape[0], 1))
+    n_components = 25
+
+    gmm1 = GaussianMixture(n_components=n_components, covariance_type='diag')
+    gmm1.fit(X1)
+    features1 = np.zeros(n_components)
+    for i in range(25):
+         var1 = np.diag(gmm1.covariances_[i])
+         weight1 = gmm1.weights_[i]
+         features1[i] = np.sum(weight1 * np.log(var1) + 0.5 * np.log(2 * np.pi * np.e))
+
+    return features1
     # Display the embeddings
 #     st.write("The x-vector embeddings are:")
 #     st.write(embeddings_xvect)
 
 # Define Streamlit app
 st.title("Audio Analysis")
-st.write("Comparision of two audio samples using xvectors.")
+st.write("Comparision of two audio samples using gmm model.")
 
 # Create audio input component
 audio_file1 = st.file_uploader("Choose 1st audio  file", type=["mp3", "wav", "flac"])
@@ -41,9 +56,9 @@ xvect1=torch.rand(2, 3,1)
 xvect2=torch.rand(2, 3,1)
 # Analyze audio properties when file is uploaded
 if audio_file1 is not None:
-    xvect1=analyze_audio(audio_file1)
+    gmm1=analyze_audio(audio_file1)
 audio_file2=st.file_uploader("Choose 2nd audio  file", type=["mp3", "wav", "flac"])
 if audio_file2 is not None:
-    xvect2=analyze_audio(audio_file2)
+    gmm2=analyze_audio(audio_file2)
 st.write("the similarity of the given two audio files is:")
-st.write(cosine_similarity(xvect1,xvect2)[0][0])
+st.write(cosine_similarity(gmm1,gmm2)[0][0])
