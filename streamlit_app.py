@@ -52,8 +52,8 @@ st.write("Comparision of two audio samples using gmm model.")
 
 # Create audio input component
 audio_file1 = st.file_uploader("Choose 1st audio  file", type=["mp3", "wav", "flac"])
-xvect1=torch.rand(2, 3,1)
-xvect2=torch.rand(2, 3,1)
+gmm1=torch.rand(2, 3,1)
+gmm2=torch.rand(2, 3,1)
 # Analyze audio properties when file is uploaded
 if audio_file1 is not None:
     gmm1=analyze_audio(audio_file1)
