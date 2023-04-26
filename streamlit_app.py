@@ -3,6 +3,7 @@ import torch
 import torchaudio
 import librosa
 import numpy as np
+from sklearn.mixture import GaussianMixture
 # Load the encoder classifier model
 
 def cosine_similarity(x1, x2):
