@@ -38,7 +38,7 @@ def analyze_audio(file):
     gmm1 = GaussianMixture(n_components=n_components, covariance_type='diag')
     gmm1.fit(X1)
     features1 = np.zeros(n_components)
-    for i in range(25):
+    for i in range(n_components):
          var1 = np.diag(gmm1.covariances_[i])
          weight1 = gmm1.weights_[i]
          features1[i] = np.sum(weight1 * np.log(var1) + 0.5 * np.log(2 * np.pi * np.e))
