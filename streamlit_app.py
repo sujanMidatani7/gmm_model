@@ -25,7 +25,7 @@ def analyze_audio(file):
         return
 
     # Encode the audio signal using the x-vector model
-    mfcc1 = librosa.feature.mfcc(y=waveform.to_numpy(), sr=16000, n_mfcc=20, n_fft=4096, hop_length=11)
+    mfcc1 = librosa.feature.mfcc(y=waveform.numpy(), sr=16000, n_mfcc=20, n_fft=4096, hop_length=11)
     delta_mfcc1 = librosa.feature.delta(mfcc1)
     delta2_mfcc1 = librosa.feature.delta(mfcc1, order=2)
     ddmfcc1 = np.vstack((mfcc1, delta_mfcc1, delta2_mfcc1))
