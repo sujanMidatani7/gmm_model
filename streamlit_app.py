@@ -63,4 +63,4 @@ audio_file2=st.file_uploader("Choose 2nd audio  file", type=["mp3", "wav", "flac
 if audio_file2 is not None:
     gmm2=analyze_audio(audio_file2)
 st.write("the similarity of the given two audio files is:")
-st.write(cosine_similarity(gmm1,gmm2)[0][0])
+st.write(cosine_similarity(gmm1,gmm2))
