@@ -31,7 +31,7 @@ def analyze_audio(file):
     delta2_mfcc1 = librosa.feature.delta(mfcc1, order=2)
     ddmfcc1 = np.vstack((mfcc1, delta_mfcc1, delta2_mfcc1))
     ddmfcc1 = (ddmfcc1 - np.mean(ddmfcc1)) / np.std(ddmfcc1)
-    st.write(ddmfcc1.shape)
+#     st.write(ddmfcc1.shape)
     X1 = np.reshape(ddmfcc1.T, (ddmfcc1.shape[1]*ddmfcc1.shape[0]*ddmfcc1.shape[2], 1))
     n_components = 25
 
